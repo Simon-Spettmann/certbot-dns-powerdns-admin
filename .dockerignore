@@ -1,0 +1,7 @@
+# Ignore everything
+*
+
+# Execept for:
+!/certbot_dns_powerdns_admin
+!/pyproject.toml
+!/setup.cfg
