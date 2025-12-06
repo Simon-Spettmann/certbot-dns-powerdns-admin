@@ -45,3 +45,36 @@ certbot ... \
     --dns-powerdns-admin-propagation-seconds "60" \
     ...
 ```
+
+## Example
+
+```yml
+services:
+  certbot:
+    # image: certbot/certbot
+    build: "https://github.com/Simon-Spettmann/certbot-dns-powerdns-admin.git"
+    volumes:
+      - ./certbot/data:/etc/letsencrypt/:rw
+      - ./certbot/credentials:/credentials:ro
+    command: sh -c 'while true; do certbot renew --non-interactive; sleep 86400; done"'
+```
+
+```sh
+docker compose build --pull
+docker compose up --detach
+```
+
+```sh
+docker compose exec certbot
+```
+
+```sh
+certbot certonly \
+    --non-interactive \
+    --agree-tos \
+    --authenticator "dns-powerdns-admin" \
+    --dns-powerdns-admin-credentials "/credentials/dns_powerdns_admin.ini" \
+    --dns-powerdns-admin-propagation-seconds "60" \
+    --server https://acme-v02.api.letsencrypt.org/directory \
+    -d 'example.com'
+```
