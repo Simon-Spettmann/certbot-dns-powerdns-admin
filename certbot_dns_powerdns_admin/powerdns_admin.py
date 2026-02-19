@@ -34,6 +34,24 @@ class PowerDNS_Admin:
     def add_new_record(
         self, zone, record_name, record_type, record_ttl, record_content
     ):
+        existing_records = []
+        try:
+            zone_data = self._list_records(zone)
+            for rrset in zone_data.get("rrsets", []):
+                if (
+                    rrset["name"] == f"{record_name}."
+                    and rrset["type"] == record_type
+                ):
+                    existing_records = rrset.get("records", [])
+                    break
+        except Exception:
+            pass
+
+        new_record = {"content": f'"{record_content}"', "disabled": False}
+
+        if new_record not in existing_records:
+            existing_records.append(new_record)
+
         data = {
             "rrsets": [
                 {
@@ -41,7 +59,7 @@ class PowerDNS_Admin:
                     "type": f"{record_type}",
                     "ttl": int(record_ttl),
                     "changetype": "REPLACE",
-                    "records": [{"content": f'"{record_content}"', "disabled": False}],
+                    "records": existing_records,
                 }
             ]
         }
