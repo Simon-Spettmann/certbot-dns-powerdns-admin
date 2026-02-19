@@ -37,12 +37,14 @@ dns_powerdns_admin_api_key = password
 Run `certbot` with `--authenticator "dns-powerdns-admin"` and `--dns-powerdns-admin-credentials "./dns_powerdns_admin.ini"`.
 
 Optional: `--dns-powerdns-admin-propagation-seconds "60"`
+Optional: `--dns-powerdns-admin-zone "sub.example.com"`
 
 ```sh
 certbot ... \
     --authenticator "dns-powerdns-admin" \
     --dns-powerdns-admin-credentials "./dns_powerdns_admin.ini" \
     --dns-powerdns-admin-propagation-seconds "60" \
+    --dns-powerdns-admin-zone "sub.example.com" \
     ...
 ```
 
@@ -75,6 +77,7 @@ certbot certonly \
     --authenticator "dns-powerdns-admin" \
     --dns-powerdns-admin-credentials "/credentials/dns_powerdns_admin.ini" \
     --dns-powerdns-admin-propagation-seconds "60" \
+    --dns-powerdns-admin-zone "sub.example.com" \
     --server https://acme-v02.api.letsencrypt.org/directory \
-    -d 'example.com'
+    -d 'host.sub.example.com' -d '*.host.sub.example.com' \
 ```

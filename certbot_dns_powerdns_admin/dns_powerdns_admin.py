@@ -31,6 +31,15 @@ class Authenticator(dns_common.DNSAuthenticator):
     ) -> None:
         super().add_parser_arguments(add, default_propagation_seconds)
         add("credentials", help="PowerDNS Admin credentials INI file.")
+        add(
+            "zone",
+            default=None,
+            help=(
+                "PowerDNS zone to use (e.g. 'sub.example.com'). "
+                "Overrides automatic zone detection. Useful when the authoritative "
+                "zone is not the second-level domain (e.g. wildcard certs on subzones)."
+            ),
+        )
 
     def more_info(self) -> str:
         return (
@@ -66,6 +75,9 @@ class Authenticator(dns_common.DNSAuthenticator):
         )
 
     def _get_zone(self, domain: str) -> str:
+        override = self.conf("zone")
+        if override:
+            return override
         return dns_common.base_domain_name_guesses(domain)[-2]
 
     def _perform(self, domain, validation_name, validation):
